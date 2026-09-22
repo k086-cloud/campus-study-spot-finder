@@ -1,0 +1,107 @@
+[
+    {
+        "name": "Alexander Library",
+        "campus": "College Avenue",
+        "noiseLevel": "quiet",
+        "outlets": true,
+        "groupSizes": ["individual", "small"],
+        "durations": ["medium", "long"],
+        "bestFor": "Focused study and longer individual sessions",
+        "description": "A large library with quiet study areas and spaces for longer study sessions.",
+        "dataSource": "Initial project estimate",
+        "verified": false,
+        "lastVerified": null
+    },
+    {
+        "name": "Library of Science and Medicine",
+        "campus": "Busch",
+        "noiseLevel": "quiet",
+        "outlets": true,
+        "groupSizes": ["individual", "small"],
+        "durations": ["medium", "long"],
+        "bestFor": "Science coursework and focused studying",
+        "description": "A library environment designed for quiet, focused academic work.",
+        "dataSource": "Initial project estimate",
+        "verified": false,
+        "lastVerified": null
+    },
+    {
+        "name": "Carr Library",
+        "campus": "Livingston",
+        "noiseLevel": "quiet",
+        "outlets": true,
+        "groupSizes": ["individual", "small"],
+        "durations": ["medium", "long"],
+        "bestFor": "Quiet individual work on Livingston Campus",
+        "description": "A calm library setting with study tables and individual work areas.",
+        "dataSource": "Initial project estimate",
+        "verified": false,
+        "lastVerified": null
+    },
+    {
+        "name": "Busch Student Center",
+        "campus": "Busch",
+        "noiseLevel": "moderate",
+        "outlets": true,
+        "groupSizes": ["individual", "small", "large"],
+        "durations": ["short", "medium"],
+        "bestFor": "Studying between classes and group work",
+        "description": "A convenient and active location for casual studying and collaborative work.",
+        "dataSource": "Initial project estimate",
+        "verified": false,
+        "lastVerified": null
+    },
+    {
+        "name": "Livingston Student Center",
+        "campus": "Livingston",
+        "noiseLevel": "social",
+        "outlets": true,
+        "groupSizes": ["small", "large"],
+        "durations": ["short", "medium"],
+        "bestFor": "Group discussions and casual study sessions",
+        "description": "A social environment with spaces for conversation and collaborative work.",
+        "dataSource": "Initial project estimate",
+        "verified": false,
+        "lastVerified": null
+    },
+    {
+        "name": "Academic Building",
+        "campus": "College Avenue",
+        "noiseLevel": "moderate",
+        "outlets": true,
+        "groupSizes": ["individual", "small"],
+        "durations": ["short", "medium"],
+        "bestFor": "Studying between classes and small meetings",
+        "description": "A flexible study option with spaces for individual work and small groups.",
+        "dataSource": "Initial project estimate",
+        "verified": false,
+        "lastVerified": null
+    },
+    
+    {
+        "name": "Douglass Student Center",
+        "campus": "Cook/Douglass",
+        "noiseLevel": "moderate",
+        "outlets": true,
+        "groupSizes": ["individual", "small", "large"],
+        "durations": ["short", "medium"],
+        "bestFor": "Group meetings and studying between classes",
+        "description": "A flexible student center environment for casual studying and collaborative work.",
+        "dataSource": "Initial project estimate",
+        "verified": false,
+        "lastVerified": null
+    },
+    {
+        "name": "Cook Student Center",
+        "campus": "Cook/Douglass",
+        "noiseLevel": "social",
+        "outlets": true,
+        "groupSizes": ["small", "large"],
+        "durations": ["short", "medium"],
+        "bestFor": "Casual studying and group discussions",
+        "description": "A social campus location suited for shorter study sessions and group work.",
+        "dataSource": "Initial project estimate",
+        "verified": false,
+        "lastVerified": null
+    }
+]
