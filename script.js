@@ -73,14 +73,35 @@ return {
     return scoredLocations;
 }
 
-function displayRecommendations(recommendations) {
+function displayRecommendations(recommendations, userPreferences) {
     const recommendationList =
         document.getElementById("recommendation-list");
 
     const topRecommendations = recommendations.slice(0, 3);
 
-    recommendationList.innerHTML = topRecommendations
-        .map(function (location, index) {
+    const preferredCampus = userPreferences.preferredCampus;
+
+const hasExactCampusMatch =
+    preferredCampus === "any" ||
+    recommendations.some(function (location) {
+        return (
+            location.campus === preferredCampus &&
+            location.matchPercentage === 100
+        );
+    });
+
+let matchMessage = "";
+
+if (!hasExactCampusMatch) {
+    matchMessage = `
+        <div class="no-match-message">
+            <strong>No exact match was found on ${preferredCampus} Campus.</strong>
+            <p>Here are the closest available study spot options.</p>
+        </div>
+    `;
+}
+
+    recommendationList.innerHTML = matchMessage + topRecommendations.map(function (location, index) {
             const reasonItems = location.reasons
                 .map(function (reason) {
                     return `<li>${reason}</li>`;
@@ -154,5 +175,5 @@ preferenceForm.addEventListener("submit", function (event) {
 
     console.table(recommendations);
 
-    displayRecommendations(recommendations);
+    displayRecommendations(recommendations, userPreferences);
 });
