@@ -107,6 +107,11 @@ button:hover {
     background-color: #a8002a;
 }
 
+button:disabled {
+    background-color: #b3b3b3;
+    cursor: wait;
+}
+
 #results {
     margin-top: 32px;
     padding-top: 20px;
@@ -117,49 +122,22 @@ button:hover {
     margin-top: 0;
 }
 
-@media (max-width: 600px) {
-    header {
-        padding: 30px 16px;
-    }
-
-    header h1 {
-        font-size: 29px;
-    }
-
-    header p {
-        font-size: 16px;
-    }
-
-    main {
-        width: calc(100% - 24px);
-        margin: 20px auto;
-        padding: 22px 18px;
-    }
-
-    main > h2 {
-        font-size: 24px;
-    }
-
-    .form-group select {
-        font-size: 16px;
-    }
-
-        .recommendation-card {
-        padding: 18px;
-    }
-
-    .recommendation-header {
-        align-items: flex-start;
-    }
-
-    .recommendation-card h3 {
-        font-size: 21px;
-    }
-}
-
 #recommendation-list {
     display: grid;
     gap: 20px;
+}
+
+.no-match-message {
+    padding: 14px 16px;
+    background-color: #fff8e6;
+    border: 1px solid #f1d58c;
+    border-left: 4px solid #e39b00;
+    border-radius: 6px;
+    line-height: 1.5;
+}
+
+.no-match-message p {
+    margin: 6px 0 0;
 }
 
 .recommendation-card {
@@ -170,7 +148,7 @@ button:hover {
     border-radius: 8px;
 }
 
-.recommendation-card:first-child {
+.recommendation-card.top-pick {
     background-color: #fff7f9;
     border-color: #cc0033;
 }
@@ -243,4 +221,46 @@ button:hover {
     border-radius: 4px;
     font-size: 0.9rem;
     line-height: 1.5;
+}
+
+/* Mobile overrides. Keep this block last: these selectors have the same
+   specificity as the rules above, so they only win by coming later. */
+@media (max-width: 600px) {
+    header {
+        padding: 30px 16px;
+    }
+
+    header h1 {
+        font-size: 29px;
+    }
+
+    header p {
+        font-size: 16px;
+    }
+
+    main {
+        width: calc(100% - 24px);
+        margin: 20px auto;
+        padding: 22px 18px;
+    }
+
+    main > h2 {
+        font-size: 24px;
+    }
+
+    .form-group select {
+        font-size: 16px;
+    }
+
+    .recommendation-card {
+        padding: 18px;
+    }
+
+    .recommendation-header {
+        align-items: flex-start;
+    }
+
+    .recommendation-card h3 {
+        font-size: 21px;
+    }
 }
