@@ -11,88 +11,90 @@
 
 <body>
     <header>
-    <h1>Campus Study Spot Finder</h1>
-    <p>Find the best Rutgers study location based on your preferences.</p>
+        <h1>Campus Study Spot Finder</h1>
+        <p>Find the best Rutgers study location based on your preferences.</p>
 
-    <a class="start-button" href="#preference-form">
-        Find My Study Spot
-    </a>
-</header>
+        <a class="start-button" href="#preference-form">
+            Find My Study Spot
+        </a>
+    </header>
 
     <main>
-    <h2>Choose Your Study Preferences</h2>
-    <p>Answer a few questions to get your personalized recommendation.</p>
+        <h2>Choose Your Study Preferences</h2>
+        <p>Answer a few questions to get your personalized recommendation.</p>
 
-    <form id="preference-form">
-        <div class="form-group">
-            <label for="noise-level">Preferred Noise Level</label>
+        <form id="preference-form">
+            <div class="form-group">
+                <label for="noise-level">Preferred Noise Level</label>
 
-            <select id="noise-level" name="noise-level" required>
-                <option value="">Select a noise level</option>
-                <option value="quiet">Quiet</option>
-                <option value="moderate">Moderate</option>
-                <option value="social">Social</option>
-            </select>
-        </div>
-                <div class="form-group">
-            <label for="outlet">Do You Need an Outlet?</label>
+                <select id="noise-level" name="noise-level" required>
+                    <option value="">Select a noise level</option>
+                    <option value="quiet">Quiet</option>
+                    <option value="moderate">Moderate</option>
+                    <option value="social">Social</option>
+                </select>
+            </div>
 
-            <select id="outlet" name="outlet" required>
-                <option value="">Select an option</option>
-                <option value="yes">Yes</option>
-                <option value="no">No</option>
-            </select>
-        </div>
-        <div class="form-group">
-    <label for="group-size">Group Size</label>
+            <div class="form-group">
+                <label for="outlet">Do You Need an Outlet?</label>
 
-    <select id="group-size" name="group-size" required>
-        <option value="">Select a group size</option>
-        <option value="individual">Individual</option>
-        <option value="small">Small Group (2–4 people)</option>
-        <option value="large">Large Group (5+ people)</option>
-    </select>
-        </div>
-        <div class="form-group">
-    <label for="study-duration">Study Duration</label>
+                <select id="outlet" name="outlet" required>
+                    <option value="">Select an option</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
 
-    <select id="study-duration" name="study-duration" required>
-        <option value="">Select a duration</option>
-        <option value="short">Less than 1 hour</option>
-        <option value="medium">1–3 hours</option>
-        <option value="long">More than 3 hours</option>
-    </select>
-    </div>
+            <div class="form-group">
+                <label for="group-size">Group Size</label>
 
-    <div class="form-group">
-    <label for="preferred-campus">Preferred Campus</label>
+                <select id="group-size" name="group-size" required>
+                    <option value="">Select a group size</option>
+                    <option value="individual">Individual</option>
+                    <option value="small">Small Group (2–4 people)</option>
+                    <option value="large">Large Group (5+ people)</option>
+                </select>
+            </div>
 
-    <select id="preferred-campus" name="preferred-campus" required>
-        <option value="">Select a campus</option>
-        <option value="any">No Preference</option>
-        <option value="College Avenue">College Avenue</option>
-        <option value="Busch">Busch</option>
-        <option value="Livingston">Livingston</option>
-        <option value="Cook/Douglass">Cook/Douglass</option>
-    </select>
-</div>
+            <div class="form-group">
+                <label for="study-duration">Study Duration</label>
 
+                <select id="study-duration" name="study-duration" required>
+                    <option value="">Select a duration</option>
+                    <option value="short">Less than 1 hour</option>
+                    <option value="medium">1–3 hours</option>
+                    <option value="long">More than 3 hours</option>
+                </select>
+            </div>
 
-    <button type="submit">Find My Study Spot</button>
+            <div class="form-group">
+                <label for="preferred-campus">Preferred Campus</label>
 
-    </form>
+                <select id="preferred-campus" name="preferred-campus" required>
+                    <option value="">Select a campus</option>
+                    <option value="any">No Preference</option>
+                    <option value="College Avenue">College Avenue</option>
+                    <option value="Busch">Busch</option>
+                    <option value="Livingston">Livingston</option>
+                    <option value="Cook/Douglass">Cook/Douglass</option>
+                </select>
+            </div>
 
-    <section id="results">
-    <h2>Your Recommendations</h2>
-    <div id="recommendation-list">
-        <p>Select your preferences to see recommended study locations.</p>
-    </div>
-    <p class="data-note">
-    Study conditions may change depending on time and availability.
-    Location details are initial estimates and are not real-time data.
-</p>
-</section>
+            <button type="submit">Find My Study Spot</button>
+        </form>
 
+        <section id="results">
+            <h2>Your Recommendations</h2>
+
+            <div id="recommendation-list">
+                <p>Select your preferences to see recommended study locations.</p>
+            </div>
+
+            <p class="data-note">
+                Study conditions may change depending on time and availability.
+                Location details are initial estimates and are not real-time data.
+            </p>
+        </section>
     </main>
 
     <script src="script.js"></script>
