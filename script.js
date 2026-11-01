@@ -1,28 +1,57 @@
-let studyLocations = [];
+const preferenceForm = document.getElementById("preference-form");
+const submitButton = preferenceForm.querySelector("button[type='submit']");
+const recommendationList = document.getElementById("recommendation-list");
+const submitLabel = submitButton.textContent.trim();
 
-async function loadLocations() {
-    try {
-        const response = await fetch("locations.json");
+let locationsPromise = null;
 
-        if (!response.ok) {
-            throw new Error("Could not load location data.");
-        }
-
-        studyLocations = await response.json();
-
-        console.log("Study locations loaded:", studyLocations);
-    } catch (error) {
-        console.error("Error:", error);
-
-        document.getElementById("recommendation-list").innerHTML =
-            "<p>Unable to load study locations. Please try again.</p>";
+// Fetches locations.json once and caches the promise so the submit handler can
+// simply await it. If the request fails, the cache is cleared so that the next
+// submit retries instead of staying broken.
+function getLocations() {
+    if (!locationsPromise) {
+        locationsPromise = fetch("locations.json")
+            .then(function (response) {
+                if (!response.ok) {
+                    throw new Error("Could not load locations.json (HTTP " + response.status + ")");
+                }
+                return response.json();
+            })
+            .catch(function (error) {
+                locationsPromise = null;
+                throw error;
+            });
     }
+
+    return locationsPromise;
 }
 
-loadLocations();
+function loadErrorMessage() {
+    if (window.location.protocol === "file:") {
+        return "This page has to be served over HTTP to load its data. Run a local web server (see the README) instead of opening the file directly.";
+    }
 
-function calculateRecommendations(userPreferences) {
-    const scoredLocations = studyLocations.map(function (location) {
+    return "Unable to load study locations. Please check your connection and try again.";
+}
+
+function escapeHtml(value) {
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+function calculateRecommendations(locations, userPreferences) {
+    // Noise (3), group size (2) and duration (2) always count. Outlets (1) and
+    // campus (2) only count when the user asked for them.
+    const maxScore =
+        7 +
+        (userPreferences.needsOutlet ? 1 : 0) +
+        (userPreferences.preferredCampus !== "any" ? 2 : 0);
+
+    const scoredLocations = locations.map(function (location) {
         let score = 0;
         const reasons = [];
 
@@ -45,25 +74,21 @@ function calculateRecommendations(userPreferences) {
             score += 1;
             reasons.push("Outlets are available");
         }
-        if ( userPreferences.preferredCampus !== "any" &&location.campus === userPreferences.preferredCampus) 
-{
-    score += 2;
-    reasons.push("Located on your preferred campus");
-}
 
-       const maxScore =
-    7 +
-    (userPreferences.needsOutlet ? 1 : 0) +
-    (userPreferences.preferredCampus !== "any" ? 2 : 0);
+        if (
+            userPreferences.preferredCampus !== "any" &&
+            location.campus === userPreferences.preferredCampus
+        ) {
+            score += 2;
+            reasons.push("Located on your preferred campus");
+        }
 
-const matchPercentage = Math.round((score / maxScore) * 100);
-
-return {
-    ...location,
-    score: score,
-    matchPercentage: matchPercentage,
-    reasons: reasons
-};
+        return {
+            ...location,
+            score: score,
+            matchPercentage: Math.round((score / maxScore) * 100),
+            reasons: reasons
+        };
     });
 
     scoredLocations.sort(function (a, b) {
@@ -73,107 +98,111 @@ return {
     return scoredLocations;
 }
 
-function displayRecommendations(recommendations, userPreferences) {
-    const recommendationList =
-        document.getElementById("recommendation-list");
-
-    const topRecommendations = recommendations.slice(0, 3);
-
-    const preferredCampus = userPreferences.preferredCampus;
-
-const hasExactCampusMatch =
-    preferredCampus === "any" ||
-    recommendations.some(function (location) {
-        return (
-            location.campus === preferredCampus &&
-            location.matchPercentage === 100
-        );
-    });
-
-let matchMessage = "";
-
-if (!hasExactCampusMatch) {
-    matchMessage = `
-        <div class="no-match-message">
-            <strong>No exact match was found on ${preferredCampus} Campus.</strong>
-            <p>Here are the closest available study spot options.</p>
-        </div>
-    `;
+function showMessage(message) {
+    recommendationList.innerHTML = "<p>" + escapeHtml(message) + "</p>";
 }
 
-    recommendationList.innerHTML = matchMessage + topRecommendations.map(function (location, index) {
-            const reasonItems = location.reasons
-                .map(function (reason) {
-                    return `<li>${reason}</li>`;
-                })
-                .join("");
-                const mapSearch = encodeURIComponent(
-    `${location.name} Rutgers University New Brunswick`
-);
-
-const mapsUrl =
-    `https://www.google.com/maps/search/?api=1&query=${mapSearch}`;
-
-            return `
-                <article class="recommendation-card">
-                    <div class="recommendation-header">
-                        <span class="rank">#${index + 1}</span>
-                        <span class="score">${location.matchPercentage}% Match</span>
-                    </div>
-
-                    <h3>${location.name}</h3>
-
-                    <p class="campus">${location.campus} Campus</p>
-                    <a
-                    class="map-link"
-                    href="${mapsUrl}"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    >
-                         View on Google Maps
-                    </a>
-
-                    <p>${location.description}</p>
-
-                    <p>
-                        <strong>Best for:</strong>
-                        ${location.bestFor}
-                    </p>
-
-                    <h4>Why it matches:</h4>
-
-                    <ul>
-                        ${reasonItems}
-                    </ul>
-                </article>
-            `;
+function renderCard(location, index) {
+    const reasonItems = location.reasons
+        .map(function (reason) {
+            return "<li>" + escapeHtml(reason) + "</li>";
         })
         .join("");
 
-    document.getElementById("results").scrollIntoView({
-        behavior: "smooth"
-    });
+    const mapsUrl =
+        "https://www.google.com/maps/search/?api=1&query=" +
+        encodeURIComponent(location.name + " Rutgers University New Brunswick");
+
+    const cardClass = index === 0 ? "recommendation-card top-pick" : "recommendation-card";
+
+    return `
+        <article class="${cardClass}">
+            <div class="recommendation-header">
+                <span class="rank">#${index + 1}</span>
+                <span class="score">${location.matchPercentage}% Match</span>
+            </div>
+
+            <h3>${escapeHtml(location.name)}</h3>
+
+            <p class="campus">${escapeHtml(location.campus)} Campus</p>
+
+            <a class="map-link" href="${escapeHtml(mapsUrl)}" target="_blank" rel="noopener noreferrer">
+                View on Google Maps
+            </a>
+
+            <p>${escapeHtml(location.description)}</p>
+
+            <p><strong>Best for:</strong> ${escapeHtml(location.bestFor)}</p>
+
+            <h4>Why it matches:</h4>
+            <ul>${reasonItems}</ul>
+        </article>
+    `;
 }
 
-const preferenceForm = document.getElementById("preference-form");
+function displayRecommendations(recommendations, userPreferences) {
+    if (recommendations.length === 0) {
+        showMessage("No study locations are available yet. Please check back later.");
+        return;
+    }
 
-preferenceForm.addEventListener("submit", function (event) {
-    event.preventDefault();
+    const preferredCampus = userPreferences.preferredCampus;
 
-    const userPreferences = {
+    const hasExactCampusMatch =
+        preferredCampus === "any" ||
+        recommendations.some(function (location) {
+            return location.campus === preferredCampus && location.matchPercentage === 100;
+        });
+
+    let matchMessage = "";
+
+    if (!hasExactCampusMatch) {
+        matchMessage = `
+            <div class="no-match-message">
+                <strong>No exact match was found on ${escapeHtml(preferredCampus)} Campus.</strong>
+                <p>Here are the closest available study spot options.</p>
+            </div>
+        `;
+    }
+
+    recommendationList.innerHTML =
+        matchMessage + recommendations.slice(0, 3).map(renderCard).join("");
+
+    document.getElementById("results").scrollIntoView({ behavior: "smooth" });
+}
+
+function readPreferences() {
+    return {
         noiseLevel: document.getElementById("noise-level").value,
         needsOutlet: document.getElementById("outlet").value === "yes",
         groupSize: document.getElementById("group-size").value,
         studyDuration: document.getElementById("study-duration").value,
         preferredCampus: document.getElementById("preferred-campus").value
-
     };
+}
 
-    console.log("User preferences:", userPreferences);
+preferenceForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
 
-    const recommendations = calculateRecommendations(userPreferences);
+    const userPreferences = readPreferences();
 
-    console.table(recommendations);
+    submitButton.disabled = true;
+    submitButton.textContent = "Finding your spot…";
 
-    displayRecommendations(recommendations, userPreferences);
+    try {
+        const locations = await getLocations();
+        const recommendations = calculateRecommendations(locations, userPreferences);
+        displayRecommendations(recommendations, userPreferences);
+    } catch (error) {
+        console.error(error);
+        showMessage(loadErrorMessage());
+    } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = submitLabel;
+    }
+});
+
+// Start loading right away so results appear instantly on submit.
+getLocations().catch(function () {
+    // Ignored on purpose: the submit handler reports the error and retries.
 });
